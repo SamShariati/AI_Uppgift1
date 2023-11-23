@@ -7,9 +7,10 @@ public class DT_Controller : MonoBehaviour
     public bool playerInRange;
     DT_Enemy.DecisionMaker root;
 
-
+    
     void Start()
     {
+        
         root = new DT_Enemy.DecisionMaker(
         playerInRange,
         new DT_Enemy.DecisionMaker(false, //True Branch
@@ -23,6 +24,7 @@ public class DT_Controller : MonoBehaviour
     {
         root.Execute();
         root.condition = playerInRange;
+
     }
 
     private void OnTriggerStay(Collider other)
