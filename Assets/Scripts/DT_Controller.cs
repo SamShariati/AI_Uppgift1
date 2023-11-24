@@ -6,8 +6,10 @@ public class DT_Controller : MonoBehaviour
 {
     public bool playerInRange;
     DT_Enemy.DecisionMaker root;
+    public Transform[] patrolPoints;
+    int hitpoints = 10;
 
-    
+
     void Start()
     {
         
@@ -16,13 +18,13 @@ public class DT_Controller : MonoBehaviour
         new DT_Enemy.DecisionMaker(false, //True Branch
         new DT_Enemy.Attack(), //True branch för decisionmaker
         new DT_Enemy.Flee()), //false branch för desicionmaker
-        new DT_Enemy.Patrol() //sista parametern i root som ska vara en false branch= Flee
+        new DT_Enemy.Patrol(patrolPoints) //sista parametern i root som ska vara en false branch= Flee
         );
     }
 
     private void Update()
     {
-        root.Execute();
+        root.Execute(transform);
         root.condition = playerInRange;
 
     }
