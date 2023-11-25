@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class DT_Enemy : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class DT_Enemy : MonoBehaviour
         }
     }
     
-
+//-------------PATROL------------------------------------------------------
     public class Patrol : TreeNode
     {
 
@@ -32,7 +33,7 @@ public class DT_Enemy : MonoBehaviour
             
         }
 
-        public override void Execute(Transform transform, Transform player)
+        public override void Execute(Transform enemy, Transform player)
         {
             Transform playerTest = player;
             Debug.Log("Patrolling");
@@ -41,32 +42,31 @@ public class DT_Enemy : MonoBehaviour
             {
                 Vector3 targetPosition = patrolPoints[currentPointIndex].position;
 
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                enemy.position = Vector3.MoveTowards(enemy.position, targetPosition, moveSpeed * Time.deltaTime);
                 
-                Vector3 direction = (targetPosition - transform.position).normalized;
+                Vector3 direction = (targetPosition - enemy.position).normalized;
                 //Quaternion lookRotation = Quaternion.LookRotation(direction);
 
                 if( direction!= Vector3.zero)
                 {
                     Quaternion lookRotation = Quaternion.LookRotation(direction);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+                    enemy.rotation = Quaternion.Slerp(enemy.rotation, lookRotation, Time.deltaTime * rotationSpeed);
                 }
 
-                if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
+                if (Vector3.Distance(enemy.position, targetPosition) < 0.1f)
                 {
                     currentPointIndex = (currentPointIndex + 1) % patrolPoints.Length;
 
                 }
-                else
-                {
-                    Debug.Log("No patrol points assigned");
-                }
+               
             }
         }
         
     }
 
 
+
+//-------------ATTACK---------------------------------------------------------
     public class Attack: TreeNode
     {
         float moveSpeed = 5f;
@@ -75,25 +75,32 @@ public class DT_Enemy : MonoBehaviour
 
         Transform bulletSpawnPoint;
         GameObject bulletPrefab;
-        float bulletSpeed = 10;
-        Vector3 direction;
+        
+        
         bool gunReady = true;
         float bulletCD = 3f;
 
-        public override void Execute(Transform transform, Transform player)
+        public Attack(GameObject bullet, Transform bulletSpawn)
+        {
+            bulletPrefab = bullet;
+            bulletSpawnPoint = bulletSpawn;
+        }
+
+        public override void Execute(Transform enemy, Transform player)
         {
             Debug.Log("Attacking");
 
 //------------------------MOVEMENT-----------------------------------------------------
-            transform.position = Vector3.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
-            Vector3 direction = (player.position - transform.position).normalized;
+            enemy.position = Vector3.MoveTowards(enemy.position, player.position, moveSpeed * Time.deltaTime);
+            
+            Vector3 direction = (player.position - enemy.position).normalized;
             if (direction != Vector3.zero)
             {
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+                enemy.rotation = Quaternion.Slerp(enemy.rotation, lookRotation, Time.deltaTime * rotationSpeed);
             }
 
-            //-----------------------SHOOTING------------------------------------------------------------
+//-----------------------SHOOTING------------------------------------------------------------
 
             if (!gunReady)
             {
@@ -115,18 +122,72 @@ public class DT_Enemy : MonoBehaviour
         }
     }
 
+
+//------------FLEE-------------------------------------------------------
     public class Flee: TreeNode
     {
-        public override void Execute(Transform transform, Transform Player)
+        float moveSpeed = 0.15f;
+        float rotationSpeed = 5f;
+
+        Transform bulletSpawnPoint;
+        GameObject bulletPrefab;
+
+        bool gunReady = true;
+        float bulletCD = 3f;
+        public Flee(GameObject bullet, Transform bulletSpawn)
         {
+            bulletPrefab = bullet;
+            bulletSpawnPoint = bulletSpawn;
+        }
+
+        public override void Execute(Transform enemy, Transform player)
+        {
+
+//----------------------MOVEMENT----------------------------------
             Debug.Log("Fleeing");
+
+            Vector3 directionToTarget = player.position - enemy.position;
+            Vector3 newPosition = Vector3.Lerp(enemy.position, enemy.position - directionToTarget, moveSpeed * Time.deltaTime);
+
+            // Assign the new position to the object
+            enemy.position = newPosition;
+
+            Vector3 direction = (player.position - enemy.position).normalized;
+            if (direction != Vector3.zero)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                enemy.rotation = Quaternion.Slerp(enemy.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+            }
+
+            //------------------------SHOOTING-+-------------------------
+
+            if (!gunReady)
+            {
+                bulletCD -= Time.deltaTime;
+
+                if (bulletCD <= 0)
+                {
+                    gunReady = true;
+                }
+            }
+
+            if (gunReady)
+            {
+                gunReady = false;
+                var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+                bulletCD = 3;
+
+            }
+
         }
     }
+
+//-----------DECISIONMAKER--------------------------------------------------
 
     public class DecisionMaker: TreeNode
     {
         public bool condition;
-        TreeNode trueBranch;
+        public TreeNode trueBranch;
         TreeNode falseBranch;
 
         public DecisionMaker(bool condition, TreeNode trueBranch, TreeNode falseBranch)

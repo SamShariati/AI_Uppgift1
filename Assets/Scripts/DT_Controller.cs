@@ -5,45 +5,71 @@ using UnityEngine;
 public class DT_Controller : MonoBehaviour
 {
     public Transform player;
-    public bool wtf;
-    public bool playerInVision;
+    bool lowHealth=false;
+    bool playerInVision=false;
     DT_Enemy.DecisionMaker root;
+    DT_Enemy.DecisionMaker trueNode;
     public Transform[] patrolPoints;
-    int hitpoints = 10;
+    public int enemyHealth = 10;
+    
+    public Transform bulletSpawnPoint;
+    public GameObject bulletPrefab;
+    public float playerDistance;
 
 
     void Start()
     {
-        
-        root = new DT_Enemy.DecisionMaker(
-        playerInVision,
-        new DT_Enemy.DecisionMaker(true, //True Branch
-        new DT_Enemy.Attack(), //True branch för decisionmaker
-        new DT_Enemy.Flee()), //false branch för desicionmaker
-        new DT_Enemy.Patrol(patrolPoints) //sista parametern i root som ska vara en false branch= Flee
-        );
+        trueNode = new DT_Enemy.DecisionMaker(lowHealth, new DT_Enemy.Flee(bulletPrefab, bulletSpawnPoint), new DT_Enemy.Attack(bulletPrefab, bulletSpawnPoint));
+
+        root = new DT_Enemy.DecisionMaker(playerInVision, trueNode, new DT_Enemy.Patrol(patrolPoints));
+
+
+        //root = new DT_Enemy.DecisionMaker(
+        //playerInVision,
+        //new DT_Enemy.DecisionMaker(lowHealth, //True Branch
+        //new DT_Enemy.Flee(), //True branch för decisionmaker
+        //new DT_Enemy.Attack(bulletPrefab, bulletSpawnPoint)), //false branch för desicionmaker
+        //new DT_Enemy.Patrol(patrolPoints) //sista parametern i root som ska vara en false branch= Flee
+        //);
     }
 
     private void Update()
     {
+
+        playerDistance = Vector3.Distance(transform.position, player.position);
+        if(playerDistance > 100)
+        {
+            playerInVision = false;
+        }
+        else if(playerDistance < 25)
+        {
+            playerInVision = true;
+        }
+
+        if(enemyHealth <= 5)
+        {
+            lowHealth = true;
+        }
+
+
         root.Execute(transform, player);
         root.condition = playerInVision;
 
+
+        trueNode.condition = lowHealth;
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("PlayerBullet"))
         {
-            playerInVision = true;
+
+            Destroy(other.gameObject);
+            enemyHealth--;
         }
+
     }
 
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.CompareTag("Player"))
-    //    {
-    //        playerInVision=false;
-    //    }
-    //}
+   
 }
