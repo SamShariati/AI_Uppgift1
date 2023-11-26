@@ -24,7 +24,7 @@ public class DT_Enemy : MonoBehaviour
         float rotationSpeed = 5f;
         
 
-        Transform transform;
+        
 
         public Patrol(Transform[] patrolPoints)
         {
