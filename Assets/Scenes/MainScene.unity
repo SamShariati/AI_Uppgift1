@@ -858,7 +858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f81efc0105ec3a45ac4f801ff2d51d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 15
   rotationSpeed: 300
   enemy: {fileID: 103875397}
   bulletSpawnPoint: {fileID: 1044577698}
