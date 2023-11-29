@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -246,10 +246,8 @@ GameObject:
   - component: {fileID: 103875395}
   - component: {fileID: 103875394}
   - component: {fileID: 103875399}
-  - component: {fileID: 103875401}
-  - component: {fileID: 103875400}
-  - component: {fileID: 103875402}
   - component: {fileID: 103875403}
+  - component: {fileID: 103875404}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -372,55 +370,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &103875400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103875393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d37c34824b7a579488a45d740932b59f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 715480566}
-  patrolPoints:
-  - {fileID: 2062853402}
-  - {fileID: 325259931}
-  - {fileID: 1915735509}
-  - {fileID: 338605985}
-  enemyHealth: 10
-  bulletSpawnPoint: {fileID: 1774547406}
-  bulletPrefab: {fileID: 1831213885966117110, guid: 14c9a0ade692cb24eaf5aa0a60135858, type: 3}
-  playerDistance: 0
---- !u!114 &103875401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103875393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e2d030b91e812149a6ec241dafa15f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &103875402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103875393}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44e01eadaf26ef147a8e721ca6d00af4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletSpawnPoint: {fileID: 1774547406}
-  bulletPrefab: {fileID: 1831213885966117110, guid: 14c9a0ade692cb24eaf5aa0a60135858, type: 3}
-  bulletSpeed: 10
 --- !u!135 &103875403
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -442,6 +391,23 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &103875404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103875393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32bdd9ce6d24f84eb40f8fae6735e4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints:
+  - {fileID: 2062853402}
+  - {fileID: 325259931}
+  - {fileID: 1915735509}
+  - {fileID: 338605985}
 --- !u!1 &241578835
 GameObject:
   m_ObjectHideFlags: 0
