@@ -19,8 +19,10 @@ public class DT_Controller : MonoBehaviour
 
     void Start()
     {
+        //--------------TRUENODE: (LOWHEALTH = FALSE, TRUE: FLEE STATE, FALSE= ATTACK STATE)
         trueNode = new DT_Enemy.DecisionMaker(lowHealth, new DT_Enemy.Flee(bulletPrefab, bulletSpawnPoint), new DT_Enemy.Attack(bulletPrefab, bulletSpawnPoint));
 
+        //--------------ROOT: (PLAYERINVISION=FALSE, TRUE = TRUENODE, FALSE= PATROL STATE)
         root = new DT_Enemy.DecisionMaker(playerInVision, trueNode, new DT_Enemy.Patrol(patrolPoints));
 
 
