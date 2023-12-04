@@ -9,6 +9,6 @@ public abstract class EnemyBaseState
 
     public abstract void UpdateState(StateManager enemy);
 
-    //public abstract void OnTriggerEnter(StateManager enemy, Collider collider);
+    
     
 }
